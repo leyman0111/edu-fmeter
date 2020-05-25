@@ -1,0 +1,3 @@
+rootProject.name = 'edu-fmeter'
+include 'dto'
+
