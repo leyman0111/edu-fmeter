@@ -1,4 +1,9 @@
 package ru.fmeter.dao.repo;
 
-public interface RoleDAO {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ru.fmeter.dao.model.Role;
+
+@Repository
+public interface RoleDAO extends JpaRepository<Role, Long> {
 }
