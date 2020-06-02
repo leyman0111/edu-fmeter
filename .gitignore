@@ -15,6 +15,5 @@
 /.gradle/
 /gradle/
 /out/
-*/build/
 /gradlew
 /gradlew.bat

@@ -1,0 +1,6 @@
+rootProject.name = 'edu-fmeter'
+include 'core'
+include 'dao'
+include 'dto'
+include 'utils'
+
