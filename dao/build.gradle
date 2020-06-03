@@ -1,9 +1,7 @@
-plugins {
-    id 'java'
-}
-
 group "${rootProject.group}"
 version "${rootProject.version}"
+
+apply plugin: 'java'
 
 repositories {
     mavenCentral()
@@ -13,6 +11,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
     compile group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"
     compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: "${springSecurityVersion}"
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
