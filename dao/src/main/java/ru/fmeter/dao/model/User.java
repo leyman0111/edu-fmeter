@@ -28,6 +28,12 @@ public class User implements UserDetails {
 
     public User() { }
 
+    public User(String userName, String password, Set<Role> roles) {
+        this.userName = userName;
+        this.password = password;
+        this.roles = roles;
+    }
+
     @Override
     public String getUsername() {
         return userName;

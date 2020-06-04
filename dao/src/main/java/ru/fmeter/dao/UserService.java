@@ -45,10 +45,10 @@ public class UserService implements UserDetailsService {
 
     public boolean saveUser(User user) {
         Optional<User> userFromDB = userDAO.findByUserName(user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userFromDB.isPresent()) return false;
 
         user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDAO.save(user);
         return true;
     }
