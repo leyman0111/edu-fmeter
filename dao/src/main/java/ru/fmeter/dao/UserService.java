@@ -1,6 +1,5 @@
 package ru.fmeter.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,12 +21,10 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
 
     //todo configuration
-    public UserService(UserDAO userDAO, RoleDAO roleDAO
-//                       , BCryptPasswordEncoder passwordEncoder
-    ) {
+    public UserService(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
         this.roleDAO = roleDAO;
-//        this.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,7 +45,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (userFromDB.isPresent()) return false;
 
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        user.setRoles(Collections.singleton(new Role(0L, "USER")));
         userDAO.save(user);
         return true;
     }

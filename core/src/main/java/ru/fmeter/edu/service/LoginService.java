@@ -1,5 +1,6 @@
 package ru.fmeter.edu.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.UserService;
@@ -15,11 +16,13 @@ public class LoginService {
         this.userService = userService;
     }
 
-    public ResponseEntity<UserDTO> register(UserDTO userDTO) {
-        return null;
+    public ResponseEntity<Boolean> register(UserDTO userDTO) {
+        return new ResponseEntity<>(
+                userService.saveUser(new User(userDTO.getUserName(), userDTO.getPassword())),
+                HttpStatus.OK);
     }
 
-    public ResponseEntity<String> activate(String key) {
+    public ResponseEntity<Boolean> activate(String key) {
         return null;
     }
 
@@ -27,13 +30,13 @@ public class LoginService {
         return null;
     }
 
-    public ResponseEntity<String> logout() {
+    public ResponseEntity<Boolean> logout() {
         return null;
     }
 
     public void recover(String login) { }
 
-    public ResponseEntity<String> updatePassword(LoginDTO login) {
+    public ResponseEntity<Boolean> updatePassword(LoginDTO login) {
         return null;
     }
 }

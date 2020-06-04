@@ -17,12 +17,12 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDTO> register(@RequestBody UserDTO user) {
+    public ResponseEntity<Boolean> register(@RequestBody UserDTO user) {
         return loginService.register(user);
     }
 
     @GetMapping("/activation")
-    public ResponseEntity<String> activate(@RequestParam String key) {
+    public ResponseEntity<Boolean> activate(@RequestParam String key) {
         return loginService.activate(key);
     }
 
@@ -32,7 +32,7 @@ public class LoginController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logout() {
+    public ResponseEntity<Boolean> logout() {
         return loginService.logout();
     }
 
@@ -40,7 +40,7 @@ public class LoginController {
     public void recover(@RequestBody String login) { loginService.recover(login); }
 
     @PutMapping("/password")
-    public ResponseEntity<String> updatePassword(@RequestBody LoginDTO login) {
+    public ResponseEntity<Boolean> updatePassword(@RequestBody LoginDTO login) {
         return loginService.updatePassword(login);
     }
 }
