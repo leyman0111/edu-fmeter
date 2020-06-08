@@ -9,4 +9,6 @@ ext {
     javaxVersion = '1.2'
     lombokVersion = '1.18.12'
     hibernateVersion = '1.4.200'
+    mapStructPluginVersion = '0.20'
+    mapStructVersion = '1.3.1.Final'
 }

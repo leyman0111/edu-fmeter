@@ -1,46 +1,44 @@
 package ru.fmeter.dao.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "cmn_user")
+@Data
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
     private Long id;
-    @Setter
-    private String userName;
-    @Setter
-    private String password;
-    @Getter @Setter
-    private String passwordConfirm;
+    private String login;
+    private String pass;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String midName;
+    private LocalDate birthday;
+    private String position;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Organization organization;
     @ManyToMany(fetch = FetchType.EAGER)
-    @Getter @Setter
     private Set<Role> roles;
-
-    public User() { }
-
-    public User(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
+    private boolean blocked;
+    private boolean active;
 
     @Override
     public String getUsername() {
-        return userName;
+        return getLogin();
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return getPass();
     }
 
     @Override
@@ -55,7 +53,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isBlocked();
     }
 
     @Override
@@ -65,6 +63,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isActive();
     }
 }

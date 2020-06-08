@@ -2,8 +2,8 @@ package ru.fmeter.edu.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.fmeter.dto.LoginDTO;
-import ru.fmeter.dto.UserDTO;
+import ru.fmeter.dto.LoginDto;
+import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.service.LoginService;
 
 @RestController
@@ -17,17 +17,17 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<Boolean> register(@RequestBody UserDTO user) {
+    public ResponseEntity<Boolean> register(@RequestBody UserDto user) {
         return loginService.register(user);
     }
 
-    @GetMapping("/activation")
-    public ResponseEntity<Boolean> activate(@RequestParam String key) {
-        return loginService.activate(key);
+    @GetMapping("/activation/{userId}")
+    public ResponseEntity<Boolean> activate(@PathVariable Long userId, @RequestParam String key) {
+        return loginService.activate(userId, key);
     }
 
     @PostMapping("/authorization")
-    public ResponseEntity<String> login(@RequestBody LoginDTO login) {
+    public ResponseEntity<String> login(@RequestBody LoginDto login) {
         return loginService.login(login);
     }
 
@@ -40,7 +40,7 @@ public class LoginController {
     public void recover(@RequestBody String login) { loginService.recover(login); }
 
     @PutMapping("/password")
-    public ResponseEntity<Boolean> updatePassword(@RequestBody LoginDTO login) {
+    public ResponseEntity<Boolean> updatePassword(@RequestBody LoginDto login) {
         return loginService.updatePassword(login);
     }
 }

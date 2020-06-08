@@ -3,4 +3,5 @@ include 'core'
 include 'dao'
 include 'dto'
 include 'utils'
+include 'post-service'
 

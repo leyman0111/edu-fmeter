@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ru.fmeter.dao.model.Role;
 
 @Repository
-public interface RoleDAO extends JpaRepository<Role, Long> {
+public interface RoleDao extends JpaRepository<Role, Long> {
 }
