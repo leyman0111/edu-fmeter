@@ -38,8 +38,4 @@ public class LoginService {
     }
 
     public void recover(String login) { }
-
-    public ResponseEntity<Boolean> updatePassword(LoginDto login) {
-        return null;
-    }
 }

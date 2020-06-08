@@ -38,9 +38,4 @@ public class LoginController {
 
     @PostMapping("/recovery")
     public void recover(@RequestBody String login) { loginService.recover(login); }
-
-    @PutMapping("/password")
-    public ResponseEntity<Boolean> updatePassword(@RequestBody LoginDto login) {
-        return loginService.updatePassword(login);
-    }
 }
