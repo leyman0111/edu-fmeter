@@ -28,6 +28,9 @@ dependencies {
     compile project(':utils')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${springBootVersion}"
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: "${jjwtVersion}"
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: "${jjwtVersion}"
+    runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: "${jjwtVersion}"
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapStructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapStructVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
