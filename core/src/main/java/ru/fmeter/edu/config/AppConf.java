@@ -37,6 +37,8 @@ public class AppConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login/authorization").not().fullyAuthenticated()
                 .anyRequest().authenticated()
                 .and()
+                .formLogin()
+                .and()
                 .logout()
                 .permitAll()
                 .logoutSuccessUrl("/login/logout");
