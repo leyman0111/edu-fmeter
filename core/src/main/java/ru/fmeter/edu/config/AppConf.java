@@ -3,21 +3,24 @@ package ru.fmeter.edu.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import ru.fmeter.dao.service.UserService;
+import ru.fmeter.edu.security.AuthenticationFilter;
+import ru.fmeter.edu.security.UserAuthenticationManager;
 
 @Configuration
 @EnableWebSecurity
 public class AppConf extends WebSecurityConfigurerAdapter {
-    UserService userService;
+    private UserAuthenticationManager authenticationManager;
 
     @Autowired
-    private void setUserService(UserService userService) {
-        this.userService = userService;
+    private void setAuthenticationManager(UserAuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
 
     @Bean
@@ -38,9 +41,16 @@ public class AppConf extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .and()
+                .disable()
                 .logout()
                 .permitAll()
                 .logoutSuccessUrl("/login/logout");
+    }
+
+    @Bean(name = "authenticationFilter")
+    public AuthenticationFilter authenticationFilter() {
+        AuthenticationFilter filter = new AuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManager);
+        return filter;
     }
 }
