@@ -26,6 +26,7 @@ public class UserService implements UserDetailsService {
             return false;
         user.setPass(user.getPassword());
         user.setRoles(Collections.singleton(new Role(0L, "USER")));
+        user.setActive(true);
         userDAO.save(user);
         return true;
     }

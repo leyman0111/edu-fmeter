@@ -6,20 +6,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-public class UserAuthentication implements Authentication {
+public class TokenAuthentication implements Authentication {
     private String token;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean isAuthenticated;
     private UserDetails principal;
     private Object details;
 
-    public UserAuthentication(String token, Object details) {
+    public TokenAuthentication(String token, Object details) {
         this.token = token;
         this.details = details;
     }
 
-    public UserAuthentication(String token, Collection<? extends GrantedAuthority> authorities,
-                              boolean isAuthenticated, UserDetails principal) {
+    public TokenAuthentication(String token, Collection<? extends GrantedAuthority> authorities,
+                               boolean isAuthenticated, UserDetails principal) {
         this.token = token;
         this.authorities = authorities;
         this.isAuthenticated = isAuthenticated;

@@ -3,23 +3,20 @@ package ru.fmeter.edu.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import ru.fmeter.dao.service.UserService;
 import ru.fmeter.edu.security.AuthenticationFilter;
-import ru.fmeter.edu.security.UserAuthenticationManager;
+import ru.fmeter.edu.security.TokenAuthenticationManager;
 
 @Configuration
 @EnableWebSecurity
 public class AppConf extends WebSecurityConfigurerAdapter {
-    private UserAuthenticationManager authenticationManager;
+    private TokenAuthenticationManager authenticationManager;
 
     @Autowired
-    private void setAuthenticationManager(UserAuthenticationManager authenticationManager) {
+    private void setAuthenticationManager(TokenAuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -44,6 +41,7 @@ public class AppConf extends WebSecurityConfigurerAdapter {
                 .disable()
                 .logout()
                 .permitAll()
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login/logout");
     }
 

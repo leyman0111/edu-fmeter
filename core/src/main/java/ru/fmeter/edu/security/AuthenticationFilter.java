@@ -22,22 +22,20 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
             request.getRequestDispatcher(request.getServletPath()
                     + request.getPathInfo()).forward(request, response);
         });
-        setAuthenticationFailureHandler((request, response, exception) -> {
-            response.getOutputStream().print(exception.getMessage());
-        });
+        setAuthenticationFailureHandler((request, response, exception) ->
+                response.getOutputStream().print(exception.getMessage()));
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException {
         String token = request.getHeader("token");
-        if (token == null) token = request.getParameter("token");
         if (token == null) {
-            UserAuthentication authentication = new UserAuthentication(null, null);
+            TokenAuthentication authentication = new TokenAuthentication(null, null);
             authentication.setAuthenticated(false);
             return authentication;
         }
-        UserAuthentication authentication = new UserAuthentication(token, request);
+        TokenAuthentication authentication = new TokenAuthentication(token, request);
         return getAuthenticationManager().authenticate(authentication);
     }
 

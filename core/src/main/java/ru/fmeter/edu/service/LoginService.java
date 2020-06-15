@@ -1,7 +1,5 @@
 package ru.fmeter.edu.service;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -12,26 +10,18 @@ import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.LoginDto;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.mapper.UserMapper;
-import ru.fmeter.edu.security.UserAuthentication;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import ru.fmeter.edu.security.TokenAuthentication;
 
 @Service
 public class LoginService {
-    private static final String TOKEN_DECRYPTION_KEY = "CmEyuNkONsSFyD8pryDdJisVvWAOEAE1jtVDg8e4GbhCk";
-
     private final UserService userService;
     private final UserMapper userMapper;
+    private final TokenService tokenService;
 
-    public LoginService(UserService userService, UserMapper userMapper) {
+    public LoginService(UserService userService, UserMapper userMapper, TokenService tokenService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.tokenService = tokenService;
     }
 
     public ResponseEntity<Boolean> register(UserDto userDTO) {
@@ -48,37 +38,18 @@ public class LoginService {
     public ResponseEntity<String> login(LoginDto login) {
         User user = (User) userService.loadUserByUsername(login.getUsername());
         if (user.getPass().equals(login.getPassword())) {
-            Authentication userAuth = new UserAuthentication(generateToken(user),
-                    user.getAuthorities(), true, user);
+            String token = tokenService.generate(user.getId(), user.getLogin());
+            Authentication userAuth =
+                    new TokenAuthentication(token, user.getAuthorities(), true, user);
             SecurityContextHolder.getContext().setAuthentication(userAuth);
-            return new ResponseEntity<>(
-                    generateToken(user),
-                    HttpStatus.OK);
+            return new ResponseEntity<>(token, HttpStatus.OK);
         }
         return new ResponseEntity<>("INCORRECT PASSWORD", HttpStatus.OK);
     }
 
     public ResponseEntity<Boolean> logout() {
-        return null;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     public void recover(String login) { }
-
-    private String generateToken(User user) {
-        Map<String, Object> tokenData = new HashMap<>();
-        tokenData.put("userId", user.getId());
-        tokenData.put("login", user.getLogin());
-        tokenData.put("created", new Date());
-        Calendar expDate = Calendar.getInstance();
-        expDate.add(Calendar.DATE, 1);
-        tokenData.put("expirationDate", expDate);
-        Key key = new SecretKeySpec(
-                DatatypeConverter.parseBase64Binary(TOKEN_DECRYPTION_KEY),
-                SignatureAlgorithm.HS512.getJcaName());
-        return Jwts.builder()
-                .setExpiration(expDate.getTime())
-                .setClaims(tokenData)
-                .signWith(key)
-                .compact();
-    }
 }
