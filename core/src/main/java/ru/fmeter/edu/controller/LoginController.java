@@ -1,6 +1,5 @@
 package ru.fmeter.edu.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmeter.dto.LoginDto;
@@ -8,7 +7,6 @@ import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.service.LoginService;
 
 @RestController
-@RequestMapping("/login")
 public class LoginController {
 
     private final LoginService loginService;
@@ -18,31 +16,25 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<Boolean> register(@RequestBody UserDto user) {
+    public ResponseEntity<String> register(@RequestBody UserDto user) {
         return loginService.register(user);
     }
 
-    @GetMapping("/activation/{userId}")
-    public ResponseEntity<Boolean> activate(@PathVariable Long userId, @RequestParam String key) {
-        return loginService.activate(userId, key);
+    @GetMapping("/activation/{key}")
+    public ResponseEntity<String> activate(@PathVariable String key) {
+        return loginService.activate(key);
     }
 
-    @PostMapping("/authorization")
+    @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto login) {
         return loginService.login(login);
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<Boolean> logout() {
-        return loginService.logout();
-    }
-
     @PostMapping("/recovery")
-    public void recover(@RequestBody String login) { loginService.recover(login); }
+    public void recover(@RequestBody LoginDto login) { loginService.recover(login.getUsername()); }
 
-    @PostMapping("/name")
-    public ResponseEntity<String> test() {
-        return new ResponseEntity<>("ИЛЬНУР", HttpStatus.OK);
+    @PostMapping("/recovery/{key}")
+    public ResponseEntity<String> updatePassword(@PathVariable String key, @RequestBody LoginDto loginDto) {
+        return loginService.recover(key, loginDto);
     }
-
 }
