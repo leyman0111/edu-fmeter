@@ -2,6 +2,7 @@ package ru.fmeter.edu.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.User;
 import ru.fmeter.dao.service.UserService;
@@ -15,15 +16,19 @@ public class LoginService {
     private final UserMapper userMapper;
     private final TokenService tokenService;
     private final SecretKeyService secretKeyService;
+    private final PasswordEncoder passwordEncoder;
 
-    public LoginService(UserService userService, UserMapper userMapper, TokenService tokenService, SecretKeyService secretKeyService) {
+    public LoginService(UserService userService, UserMapper userMapper, TokenService tokenService,
+                        SecretKeyService secretKeyService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.tokenService = tokenService;
         this.secretKeyService = secretKeyService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public ResponseEntity<String> register(UserDto userDTO) {
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         if (userService.create(userMapper.userDtoToUser(userDTO))) {
             String secretKey = secretKeyService.generate(userDTO.getLogin());
             //todo: send secretKey to email
@@ -51,7 +56,7 @@ public class LoginService {
 
     public ResponseEntity<String> login(LoginDto login) {
         User user = (User) userService.loadUserByUsername(login.getUsername());
-        if (user.getPass().equals(login.getPassword())) {
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
             String token = tokenService.generate(user);
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
@@ -63,13 +68,13 @@ public class LoginService {
         System.out.println(secretKey);
     }
 
-    public ResponseEntity<String> recover(String secretKey, LoginDto loginDto) {
+    public ResponseEntity<String> recover(String secretKey, LoginDto login) {
         String username = secretKeyService.validate(secretKey);
-        if (username == null || !username.equals(loginDto.getUsername())) {
+        if (username == null || !username.equals(login.getUsername())) {
             return new ResponseEntity<>("Wrong secret key", HttpStatus.OK);
         }
         User user = (User) userService.loadUserByUsername(username);
-        user.setPass(loginDto.getPassword());
+        user.setPass(passwordEncoder.encode(login.getPassword()));
         if (userService.update(user)) {
             secretKeyService.delete(secretKey);
             return new ResponseEntity<>("OK!", HttpStatus.OK);

@@ -2,6 +2,7 @@ package ru.fmeter.edu.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.User;
 
@@ -45,8 +46,14 @@ public class TokenService {
     }
 
     private boolean isValid(String token) {
-        //todo: token overdue check
-        //todo: delete overdue token
-        return true;
+        DefaultClaims claims = (DefaultClaims) Jwts.parserBuilder().setSigningKey(TOKEN_DECRYPTION_KEY).build()
+                .parse(token).getBody();
+        Long expDate = claims.get("expirationDate", Long.class);
+        if (expDate != null && new Date(expDate).after(new Date())) {
+            return true;
+        } else {
+            reject(token);
+            return false;
+        }
     }
 }

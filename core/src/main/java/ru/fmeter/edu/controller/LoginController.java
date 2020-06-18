@@ -1,5 +1,6 @@
 package ru.fmeter.edu.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmeter.dto.LoginDto;
@@ -31,10 +32,17 @@ public class LoginController {
     }
 
     @PostMapping("/recovery")
-    public void recover(@RequestBody LoginDto login) { loginService.recover(login.getUsername()); }
+    public void recover(@RequestBody LoginDto login) {
+        loginService.recover(login.getUsername());
+    }
 
     @PostMapping("/recovery/{key}")
     public ResponseEntity<String> updatePassword(@PathVariable String key, @RequestBody LoginDto loginDto) {
         return loginService.recover(key, loginDto);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<String> getName() {
+        return new ResponseEntity<>("NAME", HttpStatus.OK);
     }
 }
