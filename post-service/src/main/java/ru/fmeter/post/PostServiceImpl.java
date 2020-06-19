@@ -44,13 +44,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public void sendCertificate(String addressee, File file) { }
 
-    private boolean sendMail(String addressee, String subject, String message) {
+    private void sendMail(String addressee, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom(addresser);
         mailMessage.setTo(addressee);
         mailMessage.setSubject(subject);
         mailMessage.setText(message);
         mailSender.send(mailMessage);
-        return true;
     }
 }
