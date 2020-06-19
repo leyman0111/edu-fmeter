@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages = {"ru.fmeter.edu", "ru.fmeter.dao"})
+@SpringBootApplication(scanBasePackages = {"ru.fmeter.edu", "ru.fmeter.dao", "ru.fmeter.post"})
 @EnableJpaRepositories(basePackages = {"ru.fmeter.dao"})
 @EntityScan(basePackages = {"ru.fmeter.dao"})
 public class Application {

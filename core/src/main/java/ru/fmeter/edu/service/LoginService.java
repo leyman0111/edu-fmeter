@@ -9,20 +9,23 @@ import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.LoginDto;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.mapper.UserMapper;
+import ru.fmeter.post.PostService;
 
 @Service
 public class LoginService {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PostService postService;
     private final TokenService tokenService;
     private final SecretKeyService secretKeyService;
     private final PasswordEncoder passwordEncoder;
 
     public LoginService(UserService userService, UserMapper userMapper, TokenService tokenService,
-                        SecretKeyService secretKeyService, PasswordEncoder passwordEncoder) {
+                        PostService postService, SecretKeyService secretKeyService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.tokenService = tokenService;
+        this.postService = postService;
         this.secretKeyService = secretKeyService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -31,7 +34,7 @@ public class LoginService {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         if (userService.create(userMapper.userDtoToUser(userDTO))) {
             String secretKey = secretKeyService.generate(userDTO.getLogin());
-            //todo: send secretKey to email
+            postService.sendActivationMail(userDTO.getEmail(), secretKey);
             System.out.println(secretKey);
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
@@ -62,10 +65,16 @@ public class LoginService {
         }
         return new ResponseEntity<>("Incorrect password", HttpStatus.OK);
     }
-    public void recover(String login) {
-        String secretKey = secretKeyService.generate(login);
-        //todo: send secretKey to email
-        System.out.println(secretKey);
+
+    public ResponseEntity<String> recover(String login) {
+        User user = (User) userService.loadUserByUsername(login);
+        if (user != null) {
+            String secretKey = secretKeyService.generate(login);
+            postService.sendRecoveryMail(user.getEmail(), secretKey);
+            System.out.println(secretKey);
+            return new ResponseEntity<>("OK!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Can`t find username", HttpStatus.OK);
     }
 
     public ResponseEntity<String> recover(String secretKey, LoginDto login) {

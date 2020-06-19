@@ -17,7 +17,7 @@ import ru.fmeter.edu.security.TokenLogoutHandler;
 
 @Configuration
 @EnableWebSecurity
-public class AppConf extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationManager authenticationManager;
     private LogoutHandler logoutHandler;
 

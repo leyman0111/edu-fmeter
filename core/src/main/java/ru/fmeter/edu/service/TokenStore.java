@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TokenStore {
-    private final static Map<String, String> tokens = new HashMap<>();
+    private static Map<String, String> tokens = new HashMap<>();
 
     static boolean add(String token, String login) {
+        if (tokens.size() >= 100) {
+            tokens = new HashMap<>();
+        }
         if (!tokens.containsValue(login)) {
             tokens.put(token, login);
             return true;

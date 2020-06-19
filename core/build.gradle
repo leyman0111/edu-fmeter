@@ -26,6 +26,7 @@ dependencies {
     compile project(':dto')
     compile project(':dao')
     compile project(':utils')
+    compile project(':post-service')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${springBootVersion}"
     compile 'io.jsonwebtoken:jjwt-api:0.11.2'
