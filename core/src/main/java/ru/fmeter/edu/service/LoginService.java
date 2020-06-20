@@ -58,11 +58,11 @@ public class LoginService {
 
     public ResponseEntity<String> login(LoginDto login) {
         User user = (User) userService.loadUserByUsername(login.getUsername());
-        if (passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.isActive() && user.isEnabled()) {
             String token = tokenService.generate(user);
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Incorrect password", HttpStatus.OK);
+        return new ResponseEntity<>("Access denied", HttpStatus.FORBIDDEN);
     }
 
     public ResponseEntity<String> recover(String login) {

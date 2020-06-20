@@ -23,13 +23,15 @@ public class TokenAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
-            String userName = tokenService.validate((String) authentication.getPrincipal());
-            if (userName == null) {
-                authentication.setAuthenticated(false);
-                return authentication;
+            String username = tokenService.validate((String) authentication.getPrincipal());
+            if (username != null) {
+                User principal = (User) userService.loadUserByUsername(username);
+                if (principal.isActive() && principal.isEnabled()) {
+                    return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+                }
             }
-            User principal = (User) userService.loadUserByUsername(userName);
-            return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+            authentication.setAuthenticated(false);
+            return authentication;
         } catch (Exception e) {
             if (e instanceof AuthenticationServiceException) {
                 throw e;
