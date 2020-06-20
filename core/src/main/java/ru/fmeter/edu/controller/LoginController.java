@@ -40,9 +40,4 @@ public class LoginController {
     public ResponseEntity<String> updatePassword(@PathVariable String key, @RequestBody LoginDto loginDto) {
         return loginService.recover(key, loginDto);
     }
-
-    @GetMapping("/name")
-    public ResponseEntity<String> getName() {
-        return new ResponseEntity<>("NAME", HttpStatus.OK);
-    }
 }
