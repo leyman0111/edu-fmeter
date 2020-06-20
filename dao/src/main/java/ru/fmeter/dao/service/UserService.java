@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public boolean create(User user) {
         Optional<User> dbUser = userDAO.findUserByLoginOrEmail(user.getUsername(), user.getEmail());
-        if (dbUser.isPresent()) return !dbUser.get().isActive();
+        if (dbUser.isPresent()) return !dbUser.get().isEnabled();
 
         user.setPass(user.getPassword());
         Optional<Role> role = roleDao.findById(2L);

@@ -58,7 +58,7 @@ public class LoginService {
 
     public ResponseEntity<String> login(LoginDto login) {
         User user = (User) userService.loadUserByUsername(login.getUsername());
-        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.isActive() && user.isEnabled()) {
+        if (passwordEncoder.matches(login.getPassword(), user.getPassword()) && user.isEnabled() && user.isAccountNonLocked()) {
             String token = tokenService.generate(user);
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
@@ -68,7 +68,7 @@ public class LoginService {
     public ResponseEntity<String> recover(String login) {
         User user = (User) userService.loadUserByUsername(login);
         if (user != null) {
-            if (!user.isActive()) {
+            if (!user.isEnabled()) {
                 return new ResponseEntity<>("Account was not activated", HttpStatus.OK);
             }
             String secretKey = SecretKeyStore.generate(login);

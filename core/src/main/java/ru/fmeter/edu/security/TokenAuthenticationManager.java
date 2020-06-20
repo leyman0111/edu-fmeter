@@ -26,7 +26,7 @@ public class TokenAuthenticationManager implements AuthenticationManager {
             String username = tokenService.validate((String) authentication.getPrincipal());
             if (username != null) {
                 User principal = (User) userService.loadUserByUsername(username);
-                if (principal.isActive() && principal.isEnabled()) {
+                if (principal.isEnabled() && principal.isAccountNonLocked()) {
                     return new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
                 }
             }
