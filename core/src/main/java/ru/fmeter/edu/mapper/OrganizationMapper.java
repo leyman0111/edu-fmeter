@@ -7,4 +7,6 @@ import ru.fmeter.dto.OrganizationDto;
 @Mapper(componentModel = "spring")
 public interface OrganizationMapper {
     Organization orgDtoToOrg(OrganizationDto organizationDto);
+
+    OrganizationDto orgToOrgDto(Organization organization);
 }

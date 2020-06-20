@@ -9,4 +9,7 @@ import ru.fmeter.dto.UserDto;
 public interface UserMapper {
     @Mapping(source = "password", target = "pass")
     User userDtoToUser(UserDto userDto);
+
+    @Mapping(source = "pass", target = "password")
+    UserDto userToUserDto(User user);
 }
