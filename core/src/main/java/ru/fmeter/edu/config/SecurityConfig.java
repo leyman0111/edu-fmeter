@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/recovery").not().fullyAuthenticated()
                 .antMatchers("/recovery/**").not().fullyAuthenticated()
                 .antMatchers("/login").not().fullyAuthenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
