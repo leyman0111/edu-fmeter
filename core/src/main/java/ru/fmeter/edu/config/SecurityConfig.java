@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/registration").not().fullyAuthenticated()
                 .antMatchers("/activation/**").not().fullyAuthenticated()
+                .antMatchers("/recovery").not().fullyAuthenticated()
                 .antMatchers("/recovery/**").not().fullyAuthenticated()
                 .antMatchers("/login").not().fullyAuthenticated()
                 .anyRequest().authenticated()

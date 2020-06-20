@@ -32,8 +32,8 @@ public class LoginController {
     }
 
     @PostMapping("/recovery")
-    public ResponseEntity<String> recover(@RequestBody LoginDto login) {
-        return loginService.recover(login.getUsername());
+    public ResponseEntity<String> recover(@RequestBody String login) {
+        return loginService.recover(login);
     }
 
     @PostMapping("/recovery/{key}")

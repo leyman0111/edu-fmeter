@@ -11,6 +11,7 @@ import ru.fmeter.dao.repo.UserDao;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -22,8 +23,9 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public boolean create(User user) {
-        if (userDAO.findUserByLoginOrEmail(user.getUsername(), user.getEmail()).isPresent())
-            return false;
+        Optional<User> dbUser = userDAO.findUserByLoginOrEmail(user.getUsername(), user.getEmail());
+        if (dbUser.isPresent()) return !dbUser.get().isActive();
+
         user.setPass(user.getPassword());
         user.setRoles(Collections.singleton(new Role(0L, "USER")));
         user.setActive(false);
