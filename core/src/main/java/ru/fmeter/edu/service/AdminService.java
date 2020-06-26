@@ -23,11 +23,9 @@ public class AdminService {
     }
 
     public ResponseEntity<UserDto> getUser(Long id) {
-        User user = userService.findById(id);
-        if (user != null) {
-            return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
-        }
-        return ResponseEntity.of(Optional.empty());
+        Optional<User> user = userService.findById(id);
+        return user.map(value -> new ResponseEntity<>(userMapper.userToUserDto(value), HttpStatus.OK))
+                .orElseGet(() -> ResponseEntity.of(Optional.empty()));
     }
 
     public ResponseEntity<List<UserDto>> getUsers() {
@@ -39,8 +37,9 @@ public class AdminService {
     }
 
     public ResponseEntity<String> blockUser(Long id) {
-        User user = userService.findById(id);
-        if (user != null) {
+        Optional<User> userDB = userService.findById(id);
+        if (userDB.isPresent()) {
+            User user = userDB.get();
             user.setBlocked(user.isAccountNonLocked());
             if (userService.update(user)) {
                 return new ResponseEntity<>("OK!", HttpStatus.OK);

@@ -35,7 +35,7 @@ public class ProfileService {
     }
 
     public ResponseEntity<String> updateProfile(UserDto userDto) {
-        User user = userService.findByEmail(userDto.getEmail());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!userDto.getLogin().equals(user.getLogin()) && userService.isLoginExist(userDto.getLogin())) {
             return new ResponseEntity<>("Login is already exist", HttpStatus.OK);
         }

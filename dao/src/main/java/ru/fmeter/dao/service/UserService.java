@@ -12,6 +12,7 @@ import ru.fmeter.dao.repo.UserDao;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -50,8 +51,8 @@ public class UserService implements UserDetailsService {
         return userDAO.findUserByLogin(login).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public User findById(Long id) {
-        return userDAO.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public Optional<User> findById(Long id) {
+        return userDAO.findById(id);
     }
 
     public boolean update(User user) {

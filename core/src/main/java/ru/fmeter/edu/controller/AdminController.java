@@ -30,4 +30,6 @@ public class AdminController {
     public ResponseEntity<String> blockUser(@PathVariable Long id) {
         return adminService.blockUser(id);
     }
+
+    //todo: set roles
 }
