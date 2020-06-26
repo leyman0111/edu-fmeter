@@ -2,6 +2,7 @@ package ru.fmeter.edu.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.User;
@@ -34,12 +35,10 @@ public class LoginService {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         if (userService.create(userMapper.userDtoToUser(userDTO))) {
             String secretKey = SecretKeyStore.generate(userDTO.getLogin());
-            System.out.println(secretKey);
             postService.sendActivationMail(userDTO.getEmail(), secretKey);
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Login or email is already registered", HttpStatus.OK);
-
     }
 
     public ResponseEntity<String> activate(String secretKey) {
@@ -66,22 +65,22 @@ public class LoginService {
     }
 
     public ResponseEntity<String> recover(String login) {
-        User user = (User) userService.loadUserByUsername(login);
-        if (user != null) {
+        try {
+            User user = (User) userService.loadUserByUsername(login);
             if (!user.isEnabled()) {
                 return new ResponseEntity<>("Account was not activated", HttpStatus.OK);
             }
             String secretKey = SecretKeyStore.generate(login);
-            System.out.println(secretKey);
             postService.sendRecoveryMail(user.getEmail(), secretKey);
             return new ResponseEntity<>("OK!", HttpStatus.OK);
+        } catch (UsernameNotFoundException e) {
+            return new ResponseEntity<>("User isn`t exist", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Can`t find username", HttpStatus.OK);
     }
 
     public ResponseEntity<String> recover(String secretKey, LoginDto loginDto) {
         Optional<String> login = SecretKeyStore.findLogin(secretKey);
-        if (login.isPresent() && login.get().equals(loginDto.getUsername())) {
+        if (login.isPresent()) {
             User user = (User) userService.loadUserByUsername(login.get());
             user.setPass(passwordEncoder.encode(loginDto.getPassword()));
             if (userService.update(user)) {

@@ -18,8 +18,6 @@ public class TokenLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        if (!tokenService.reject(request.getHeader("AUTH-TOKEN"))) {
-            System.out.println("Can`t logout!");
-        }
+        tokenService.reject(request.getHeader("AUTH-TOKEN"));
     }
 }

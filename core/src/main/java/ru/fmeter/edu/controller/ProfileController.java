@@ -17,17 +17,17 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<UserDto> get() {
-        return profileService.get();
+        return profileService.getProfile();
     }
 
     @PostMapping
     public ResponseEntity<String> update(@RequestBody UserDto userDto) {
-        return profileService.update(userDto);
+        return profileService.updateProfile(userDto);
     }
 
     @DeleteMapping
     public ResponseEntity<String> delete() {
-        return profileService.delete();
+        return profileService.deleteProfile();
     }
 
     @PostMapping("/password")

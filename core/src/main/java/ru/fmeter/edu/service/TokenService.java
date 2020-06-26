@@ -19,6 +19,15 @@ public class TokenService {
     private static final String TOKEN_DECRYPTION_KEY = "CmEyuNkONsSFyD8pryDdJisVvWAOEAE1jtVDg8e4GbhCk";
 
     public String generate(User user) {
+        String token = TokenStore.findTokenByUser(user.getLogin());
+        if (token == null || !validate(token)) {
+            token = getNewToken(user);
+            TokenStore.add(token, user.getLogin());
+        }
+        return token;
+    }
+
+    private String getNewToken(User user) {
         Map<String, Object> tokenData = new HashMap<>();
         tokenData.put("userId", user.getId());
         tokenData.put("login", user.getLogin());
@@ -29,30 +38,33 @@ public class TokenService {
         Key key = new SecretKeySpec(
                 DatatypeConverter.parseBase64Binary(TOKEN_DECRYPTION_KEY),
                 SignatureAlgorithm.HS512.getJcaName());
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setExpiration(expDate.getTime())
                 .setClaims(tokenData)
                 .signWith(key)
                 .compact();
-        return TokenStore.add(token, user.getLogin()) ? token : null;
     }
 
-    public String validate(String token) {
-        return isValid(token) ? TokenStore.findUserByToken(token) : null;
+    public String getUsername(String token) {
+        return validate(token) ? TokenStore.findUserByToken(token) : null;
     }
 
-    public boolean reject(String token) {
-        return TokenStore.delete(token);
+    public void reject(String token) {
+        TokenStore.delete(token);
     }
 
-    private boolean isValid(String token) {
-        DefaultClaims claims = (DefaultClaims) Jwts.parserBuilder().setSigningKey(TOKEN_DECRYPTION_KEY).build()
-                .parse(token).getBody();
-        Long expDate = claims.get("expirationDate", Long.class);
-        if (expDate != null && new Date(expDate).after(new Date())) {
-            return true;
-        } else {
-            reject(token);
+    private boolean validate(String token) {
+        try {
+            DefaultClaims claims = (DefaultClaims) Jwts.parserBuilder().setSigningKey(TOKEN_DECRYPTION_KEY).build()
+                    .parse(token).getBody();
+            Long expDate = claims.get("expirationDate", Long.class);
+            if (expDate != null && new Date(expDate).after(new Date())) {
+                return true;
+            } else {
+                reject(token);
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
     }

@@ -9,11 +9,6 @@ public class SecretKeyStore {
     private static Map<String, String> secretKeys = new HashMap<>();
 
     static String generate(String login) {
-        for (Map.Entry<String, String> entry : secretKeys.entrySet()) {
-            if (entry.getValue().equals(login)) {
-                return entry.getKey();
-            }
-        }
         if (secretKeys.size() >= 100) {
             secretKeys = new HashMap<>();
         }
@@ -23,7 +18,7 @@ public class SecretKeyStore {
     }
 
     static Optional<String> findLogin(String secretKey) {
-        return Optional.of(secretKeys.get(secretKey));
+        return Optional.ofNullable(secretKeys.get(secretKey));
     }
 
     static void delete(String secretKey) {

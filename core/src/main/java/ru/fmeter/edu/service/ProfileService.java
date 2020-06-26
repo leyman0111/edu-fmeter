@@ -29,32 +29,30 @@ public class ProfileService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<UserDto> get() {
+    public ResponseEntity<UserDto> getProfile() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user != null) {
-            user.setPass("");
-            return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
-        }
-        return ResponseEntity.of(Optional.empty());
+        return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> update(UserDto userDto) {
-        User user = (User) userService.loadUserByUsername(userDto.getEmail());
-        if (user != null) {
-            user.setFirstName(userDto.getFirstName());
-            user.setLastName(userDto.getLastName());
-            user.setMidName(userDto.getMidName());
-            user.setBirthday(userDto.getBirthday());
-            user.setPosition(userDto.getPosition());
-            user.setOrganization(organizationMapper.orgDtoToOrg(userDto.getOrganization()));
-            if (userService.update(user)) {
-                return new ResponseEntity<>("OK!", HttpStatus.OK);
-            }
+    public ResponseEntity<String> updateProfile(UserDto userDto) {
+        User user = userService.findByEmail(userDto.getEmail());
+        if (!userDto.getLogin().equals(user.getLogin()) && userService.isLoginExist(userDto.getLogin())) {
+            return new ResponseEntity<>("Login is already exist", HttpStatus.OK);
+        }
+        user.setLogin(userDto.getLogin());
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setMidName(userDto.getMidName());
+        user.setBirthday(userDto.getBirthday());
+        user.setPosition(userDto.getPosition());
+        user.setOrganization(organizationMapper.orgDtoToOrg(userDto.getOrganization()));
+        if (userService.update(user)) {
+            return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Can`t update profile", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> delete() {
+    public ResponseEntity<String> deleteProfile() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.delete(user.getId());
         return new ResponseEntity<>("OK!", HttpStatus.OK);
@@ -62,11 +60,9 @@ public class ProfileService {
 
     public ResponseEntity<String> updatePassword(LoginDto loginDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user != null) {
-            user.setPass(passwordEncoder.encode(loginDto.getPassword()));
-            if (userService.update(user)) {
-                return new ResponseEntity<>("OK!", HttpStatus.OK);
-            }
+        user.setPass(passwordEncoder.encode(loginDto.getPassword()));
+        if (userService.update(user)) {
+            return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Can`t update password", HttpStatus.OK);
     }

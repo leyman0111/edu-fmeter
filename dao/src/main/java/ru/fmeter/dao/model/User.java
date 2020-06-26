@@ -28,8 +28,8 @@ public class User implements UserDetails {
     private Organization organization;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-    private boolean blocked;
-    private boolean active;
+    private boolean blocked = false;
+    private boolean active = false;
 
     @Override
     public String getUsername() {

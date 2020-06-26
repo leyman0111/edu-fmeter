@@ -23,7 +23,7 @@ public class TokenAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         try {
-            String username = tokenService.validate((String) authentication.getPrincipal());
+            String username = tokenService.getUsername((String) authentication.getPrincipal());
             if (username != null) {
                 User principal = (User) userService.loadUserByUsername(username);
                 if (principal.isEnabled() && principal.isAccountNonLocked()) {

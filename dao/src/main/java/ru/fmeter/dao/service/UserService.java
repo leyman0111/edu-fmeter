@@ -12,7 +12,6 @@ import ru.fmeter.dao.repo.UserDao;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -26,18 +25,11 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public boolean create(User user) {
-        Optional<User> dbUser = userDAO.findUserByLoginOrEmail(user.getUsername(), user.getEmail());
-        if (dbUser.isPresent()) return !dbUser.get().isEnabled();
+        if (userDAO.findUserByLoginOrEmail(user.getLogin(), user.getEmail()).isPresent()) return false;
 
-        user.setPass(user.getPassword());
-        Optional<Role> role = roleDao.findById(2L);
-        if (role.isPresent()) {
-            user.setRoles(Collections.singleton(role.get()));
-            user.setActive(false);
-            userDAO.save(user);
-            return true;
-        }
-        return false;
+        user.setRoles(Collections.singleton(Role.USER));
+        userDAO.save(user);
+        return true;
     }
 
     public List<User> findAll() {
@@ -64,7 +56,6 @@ public class UserService implements UserDetailsService {
 
     public boolean update(User user) {
         userDAO.findById(user.getId()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        user.setPass(user.getPass());
         userDAO.save(user);
         return true;
     }
@@ -72,5 +63,9 @@ public class UserService implements UserDetailsService {
     public void delete(Long id) {
         userDAO.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         userDAO.deleteById(id);
+    }
+
+    public boolean isLoginExist(String login) {
+        return userDAO.findUserByLogin(login).isPresent();
     }
 }

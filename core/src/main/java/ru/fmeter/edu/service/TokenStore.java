@@ -6,26 +6,25 @@ import java.util.Map;
 public class TokenStore {
     private static Map<String, String> tokens = new HashMap<>();
 
-    static boolean add(String token, String login) {
+    static void add(String token, String login) {
         if (tokens.size() >= 100) {
             tokens = new HashMap<>();
         }
-        if (!tokens.containsValue(login)) {
-            tokens.put(token, login);
-            return true;
-        }
-        return false;
+        tokens.put(token, login);
     }
 
     static String findUserByToken(String token) {
         return tokens.get(token);
     }
 
-    static boolean delete(String token) {
-        if (tokens.containsKey(token)) {
-            tokens.remove(token);
-            return true;
+    static String findTokenByUser(String login) {
+        for (Map.Entry<String, String> entry : tokens.entrySet()) {
+            if (entry.getValue().equals(login)) {
+                return entry.getKey();
+            }
         }
-        return false;
+        return null;
     }
+
+    static void delete(String token) { tokens.remove(token); }
 }

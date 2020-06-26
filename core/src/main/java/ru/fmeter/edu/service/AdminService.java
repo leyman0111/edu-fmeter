@@ -33,7 +33,6 @@ public class AdminService {
     public ResponseEntity<List<UserDto>> getUsers() {
         List<UserDto> users = new ArrayList<>();
         for (User user : userService.findAll()) {
-            user.setPass("");
             users.add(userMapper.userToUserDto(user));
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -43,8 +42,10 @@ public class AdminService {
         User user = userService.findById(id);
         if (user != null) {
             user.setBlocked(user.isAccountNonLocked());
-            userService.update(user);
-            return new ResponseEntity<>("OK!", HttpStatus.OK);
+            if (userService.update(user)) {
+                return new ResponseEntity<>("OK!", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Can`t block or unblock user", HttpStatus.OK);
         }
         return new ResponseEntity<>("Can`t find user", HttpStatus.OK);
     }
