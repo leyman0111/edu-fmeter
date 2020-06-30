@@ -21,6 +21,14 @@ public class UserDto {
     private String midName;
     private LocalDate birthday;
     private String position;
+    /**
+     ISO 639-1:2002:
+     * en - английский,
+     * es - испанский,
+     * ru - русский
+     */
+    private String locale;
+    private Integer rating;
     @NonNull
     private OrganizationDto organization;
 

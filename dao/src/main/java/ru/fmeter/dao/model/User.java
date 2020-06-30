@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,17 @@ public class User implements UserDetails {
     private String midName;
     private LocalDate birthday;
     private String position;
+
+    /**
+    ISO 639-1:2002:
+    * en - английский,
+    * es - испанский,
+    * ru - русский
+    */
+    private String locale;
+    private int rating;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Certificate> certificates;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Organization organization;
     @ManyToMany(fetch = FetchType.EAGER)

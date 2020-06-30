@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.Role;
 import ru.fmeter.dao.model.User;
-import ru.fmeter.dao.repo.RoleDao;
 import ru.fmeter.dao.repo.UserDao;
 
 import javax.transaction.Transactional;
@@ -17,11 +16,9 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     private final UserDao userDAO;
-    private final RoleDao roleDao;
 
-    public UserService(UserDao userDAO, RoleDao roleDao) {
+    public UserService(UserDao userDAO) {
         this.userDAO = userDAO;
-        this.roleDao = roleDao;
     }
 
     @Transactional
@@ -29,6 +26,8 @@ public class UserService implements UserDetailsService {
         if (userDAO.findUserByLoginOrEmail(user.getLogin(), user.getEmail()).isPresent()) return false;
 
         user.setRoles(Collections.singleton(Role.USER));
+        user.setLocale("en");
+        user.setRating(0);
         userDAO.save(user);
         return true;
     }
