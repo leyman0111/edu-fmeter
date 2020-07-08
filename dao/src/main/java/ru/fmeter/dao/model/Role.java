@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "cmn_role")
@@ -21,9 +20,6 @@ public class Role implements GrantedAuthority {
     private Long id;
 
     private String name;
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
 
     public Role() { }
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class TestDto {
+    private Long id;
     private String name;
     private int passingScore;
     private int threshold;

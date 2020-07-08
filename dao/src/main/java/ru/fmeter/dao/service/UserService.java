@@ -6,9 +6,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.Role;
 import ru.fmeter.dao.model.User;
+import ru.fmeter.dao.repo.RoleDao;
 import ru.fmeter.dao.repo.UserDao;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +19,23 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     private final UserDao userDAO;
+    private final RoleDao roleDao;
 
-    public UserService(UserDao userDAO) {
+    public UserService(UserDao userDAO, RoleDao roleDao) {
         this.userDAO = userDAO;
+        this.roleDao = roleDao;
+    }
+
+    @PostConstruct
+    public void createRoles() {
+        if (roleDao.findAll().size() > 0) {
+            return;
+        }
+        List<Role> roles = new ArrayList<>();
+        roles.add(Role.USER);
+        roles.add(Role.ADMIN);
+        roles.add(Role.SUPER_ADMIN);
+        roleDao.saveAll(roles);
     }
 
     @Transactional

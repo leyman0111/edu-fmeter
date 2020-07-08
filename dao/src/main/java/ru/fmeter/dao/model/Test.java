@@ -15,7 +15,7 @@ public class Test {
     private String name;
     private int passingScore;
     private int threshold;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Question> questions;
     private String hardQuestions;
     private String complexity;

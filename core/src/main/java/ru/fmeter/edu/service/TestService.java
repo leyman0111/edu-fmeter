@@ -43,9 +43,10 @@ public class TestService {
     }
 
     public ResponseEntity<String> update(Long id, TestDto testDto) {
-        Optional<Test> test = testDao.findById(id);
-        if (test.isPresent()) {
-            testDao.save(testMapper.testDtoToTest(testDto));
+        if (testDao.findById(id).isPresent()) {
+            Test test = testMapper.testDtoToTest(testDto);
+            test.setId(id);
+            testDao.save(test);
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Test is not exist", HttpStatus.OK);
