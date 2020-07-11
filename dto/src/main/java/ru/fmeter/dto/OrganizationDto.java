@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 @Data
 public class OrganizationDto {
+    private Long id;
     @NonNull
     private String name;
     @NonNull

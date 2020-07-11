@@ -29,9 +29,10 @@ dependencies {
     compile project(':post-service')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: "${springBootVersion}"
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: "${springBootVersion}"
-    compile 'io.jsonwebtoken:jjwt-api:0.11.2'
-    compile 'io.jsonwebtoken:jjwt-impl:0.11.2',
-            'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: "${jjwtVersion}"
+    compile group: 'io.jsonwebtoken', name: 'jjwt-impl', version: "${jjwtVersion}"
+    compile group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: "${jjwtVersion}"
+    compile group: 'com.google.code.gson', name: 'gson', version: "${gsonVersion}"
     implementation group: 'org.mapstruct', name: 'mapstruct', version: "${mapStructVersion}"
     annotationProcessor group: 'org.mapstruct', name: 'mapstruct-processor', version: "${mapStructVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'

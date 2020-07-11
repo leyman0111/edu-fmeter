@@ -21,27 +21,27 @@ public class ExamController {
 
     @GetMapping
     public ResponseEntity<List<ExamDto>> getExams() {
-        return examService.getExams();
+        return examService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ExamDto> start(@PathVariable Long id) {
-        return examService.getExam(id);
+        return examService.find(id);
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<ExamResultDto> end(@PathVariable Long id, @RequestBody HashMap<Integer, String> answers) {
-        return examService.checkAnswers(id, answers);
+    public ResponseEntity<ExamResultDto> end(@PathVariable Long id, @RequestBody HashMap<Long, String> answers) {
+        return examService.postAnswers(id, answers);
     }
 
     @GetMapping("/results/{id}")
-    public ResponseEntity<ExamResultDto> getResult(@PathVariable Long id) {
-        return examService.getResult(id);
+    public ResponseEntity<List<ExamResultDto>> getResult(@PathVariable Long id) {
+        return examService.getResults(id);
     }
 
     @GetMapping("/questions/{id}")
     public ResponseEntity<ExamQuestionDto> getQuestion(@PathVariable Long id) {
-        return examService.getQuestion(id);
+        return examService.findQuestion(id);
     }
 
     @PostMapping("/questions/{id}")
