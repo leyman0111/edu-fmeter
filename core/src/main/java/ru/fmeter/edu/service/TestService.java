@@ -42,6 +42,14 @@ public class TestService {
         return new ResponseEntity<>(tests, HttpStatus.OK);
     }
 
+    public ResponseEntity<List<TestDto>> findByLocal(String local) {
+        List<TestDto> tests = new ArrayList<>();
+        for (Test test : testDao.findAllByLocal(local)) {
+            tests.add(testMapper.testToTestDto(test));
+        }
+        return new ResponseEntity<>(tests, HttpStatus.OK);
+    }
+
     public ResponseEntity<String> update(Long id, TestDto testDto) {
         if (testDao.findById(id).isPresent()) {
             Test test = testMapper.testDtoToTest(testDto);

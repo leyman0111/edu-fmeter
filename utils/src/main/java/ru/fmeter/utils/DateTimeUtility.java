@@ -1,4 +1,4 @@
-package ru.fmeter.utils.date;
+package ru.fmeter.utils;
 
 public class DateTimeUtility {
 }

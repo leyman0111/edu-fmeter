@@ -30,6 +30,11 @@ public class TestController {
         return testService.findAll();
     }
 
+    @GetMapping("/all/{local}")
+    public ResponseEntity<List<TestDto>> getAllLocal(@PathVariable String local) {
+        return testService.findByLocal(local);
+    }
+
     @PostMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody TestDto test) {
         return testService.update(id, test);

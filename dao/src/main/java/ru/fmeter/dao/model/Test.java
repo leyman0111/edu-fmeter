@@ -20,4 +20,5 @@ public class Test {
     private String hardQuestions;
     private String complexity;
     private boolean isBlocked = false;
+    private String local;
 }

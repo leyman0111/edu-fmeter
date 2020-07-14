@@ -46,7 +46,7 @@ public class ExamService {
     public ResponseEntity<List<ExamDto>> findAll() {
         List<ExamDto> exams = new ArrayList<>();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        for (Test test : testDao.findAll()) {
+        for (Test test : testDao.findAllByLocal(user.getLocale())) {
             if (!test.isBlocked()) {
                 ExamDto exam = examMapper.testToExamDto(test);
                 if (user.getRating() < exam.getThreshold()) {
