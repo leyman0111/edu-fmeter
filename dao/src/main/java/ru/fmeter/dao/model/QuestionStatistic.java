@@ -17,6 +17,8 @@ public class QuestionStatistic {
     private String answersStatistic;
     private String correct;
 
+    public QuestionStatistic() { }
+
     public QuestionStatistic(Long questionId, String answersStatistic, String correct) {
         this.questionId = questionId;
         this.createDate = new Date();

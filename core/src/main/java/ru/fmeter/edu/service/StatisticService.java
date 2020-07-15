@@ -3,6 +3,8 @@ package ru.fmeter.edu.service;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.*;
 import ru.fmeter.dao.repo.*;
@@ -16,6 +18,7 @@ import ru.fmeter.edu.mapper.TestStatisticMapper;
 import java.util.*;
 
 @Service
+@EnableScheduling
 public class StatisticService {
     private final TestStatisticDao testStatisticDao;
     private final QuestionStatisticDao questionStatisticDao;
@@ -40,7 +43,9 @@ public class StatisticService {
         this.testDao = testDao;
     }
 
+    @Scheduled(fixedDelay = 60000)
     private void prepareStatistics() {
+        System.out.println("Preparing statistics is started");
         for (Test test : testDao.findAll()) {
             if (test.isStatisticRequired()) {
                 prepareQuestionStatistic(test.getQuestions());
@@ -53,8 +58,11 @@ public class StatisticService {
                                 attemptsAnalytics.get("firstTimePerc"), attemptsAnalytics.get("secondTimePerc"),
                                 attemptsAnalytics.get("moreTimePerc"), analiseHardestQuestions(results),
                                 analiseAchievements(results)));
+                test.setStatisticRequired(false);
+                testDao.save(test);
             }
         }
+        System.out.println("Preparing statistics is completed");
     }
 
     private HashMap<String, Integer> analiseAttempts(List<ExamResult> results) {
@@ -155,7 +163,7 @@ public class StatisticService {
     }
 
     public ResponseEntity<TestStatisticDto> getLastTestStatistic(Long id) {
-        Optional<TestStatistic> testStatistic = testStatisticDao.findFirstByTestIdOrderByCreateDateTimeDesc(id);
+        Optional<TestStatistic> testStatistic = testStatisticDao.findFirstByTestIdOrderByCreateDateDesc(id);
         return testStatistic.map(value -> new ResponseEntity<>(testStatisticMapper.testStatisticToDto(value), HttpStatus.OK))
                 .orElseGet(() -> ResponseEntity.of(Optional.empty()));
     }

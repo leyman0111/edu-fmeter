@@ -47,7 +47,7 @@ public class ExamService {
     public ResponseEntity<List<ExamDto>> findAll() {
         List<ExamDto> exams = new ArrayList<>();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        for (Test test : testDao.findAllByLocal(user.getLocale())) {
+        for (Test test : testDao.findAllByLocal(user.getLocal())) {
             if (!test.isBlocked()) {
                 ExamDto exam = examMapper.testToExamDto(test);
                 if (user.getRating() < exam.getThreshold()) {
@@ -103,10 +103,10 @@ public class ExamService {
         return ResponseEntity.of(Optional.empty());
     }
 
-    public ResponseEntity<List<ExamResultDto>> getResults(Long id) {
+    public ResponseEntity<List<ExamResultDto>> getResults(Long testId) {
         List<ExamResultDto> resultDtos = new ArrayList<>();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ExamResult> results = examResultDao.findAllByUserIdAndTestId(user.getId(), id);
+        List<ExamResult> results = examResultDao.findAllByUserIdAndTestId(user.getId(), testId);
         if (!results.isEmpty()) {
             for (ExamResult r : results) {
                 resultDtos.add(examResultMapper.examResultToDto(r));

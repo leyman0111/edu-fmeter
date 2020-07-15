@@ -1,17 +1,17 @@
 package ru.fmeter.edu.mapper;
 
-import com.google.gson.Gson;
 import org.mapstruct.Mapper;
 import ru.fmeter.dao.model.QuestionStatistic;
 import ru.fmeter.dto.QuestionStatisticDto;
+import ru.fmeter.utils.DateTimeUtility;
 
-import java.util.HashMap;
+import java.util.Date;
 
 @Mapper(componentModel = "spring")
 public interface QuestionStatisticMapper {
     QuestionStatisticDto questionStatisticToDto(QuestionStatistic questionStatistic);
 
-    default HashMap answersStatisticToDto(String answersStatistic) {
-        return new Gson().fromJson(answersStatistic, HashMap.class);
+    default String createDateToDto(Date createDate) {
+        return DateTimeUtility.dateToString(createDate);
     }
 }

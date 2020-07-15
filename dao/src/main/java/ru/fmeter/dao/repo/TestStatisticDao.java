@@ -6,5 +6,5 @@ import ru.fmeter.dao.model.TestStatistic;
 import java.util.Optional;
 
 public interface TestStatisticDao extends JpaRepository<TestStatistic, Long> {
-    Optional<TestStatistic> findFirstByTestIdOrderByCreateDateTimeDesc(Long id);
+    Optional<TestStatistic> findFirstByTestIdOrderByCreateDateDesc(Long id);
 }

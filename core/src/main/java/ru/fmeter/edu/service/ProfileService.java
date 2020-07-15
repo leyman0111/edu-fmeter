@@ -11,6 +11,7 @@ import ru.fmeter.dto.LoginDto;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.mapper.OrganizationMapper;
 import ru.fmeter.edu.mapper.UserMapper;
+import ru.fmeter.utils.DateTimeUtility;
 
 import java.util.Optional;
 
@@ -43,8 +44,9 @@ public class ProfileService {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setMidName(userDto.getMidName());
-        user.setBirthday(userDto.getBirthday());
+        user.setBirthday(DateTimeUtility.stringToDate(userDto.getBirthday()));
         user.setPosition(userDto.getPosition());
+        user.setLocal(userDto.getLocal());
         user.setOrganization(organizationMapper.orgDtoToOrg(userDto.getOrganization()));
         if (userService.update(user)) {
             return new ResponseEntity<>("OK!", HttpStatus.OK);

@@ -34,9 +34,9 @@ public class ExamController {
         return examService.postAnswers(id, answers);
     }
 
-    @GetMapping("/results/{id}")
-    public ResponseEntity<List<ExamResultDto>> getResult(@PathVariable Long id) {
-        return examService.getResults(id);
+    @GetMapping("/results/{testId}")
+    public ResponseEntity<List<ExamResultDto>> getResult(@PathVariable Long testId) {
+        return examService.getResults(testId);
     }
 
     @GetMapping("/questions/{id}")

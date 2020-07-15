@@ -25,12 +25,15 @@ public class TestStatistic {
     private String hardestQuestions;
     private String achievements;
 
+    public TestStatistic() { }
+
     public TestStatistic(Long testId, int attempts, int passedTotal, int firstTime, int secondTime, int moreTime,
                          int firstTimePercent, int secondTimePercent, int moreTimePercent, String hardestQuestions,
                          String achievements) {
         this.testId = testId;
         this.createDate = new Date();
         this.attempts = attempts;
+        this.passedTotal = passedTotal;
         this.firstTime = firstTime;
         this.secondTime = secondTime;
         this.moreTime = moreTime;

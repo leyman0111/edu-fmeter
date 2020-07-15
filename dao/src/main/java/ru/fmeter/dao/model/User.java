@@ -5,8 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String midName;
-    private LocalDate birthday;
+    private Date birthday;
     private String position;
 
     /**
@@ -32,7 +32,7 @@ public class User implements UserDetails {
     * es - испанский,
     * ru - русский
     */
-    private String locale;
+    private String local;
     private int rating;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Certificate> certificates;

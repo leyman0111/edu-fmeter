@@ -8,7 +8,7 @@ import java.util.HashMap;
 @Data
 public class TestStatisticDto {
     private Long testId;
-    private Date createDate;
+    private String createDate;
     private int attempts;
     private int firstTime;
     private int secondTime;
@@ -16,6 +16,6 @@ public class TestStatisticDto {
     private int firstTimePercent;
     private int secondTimePercent;
     private int moreTimePercent;
-    private HashMap<Long, Integer> hardestQuestions;
-    private HashMap<Integer, Integer> achievements;
+    private String hardestQuestions;
+    private String achievements;
 }

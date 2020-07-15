@@ -43,7 +43,7 @@ public class UserService implements UserDetailsService {
         if (userDAO.findUserByLoginOrEmail(user.getLogin(), user.getEmail()).isPresent()) return false;
 
         user.setRoles(Collections.singleton(Role.USER));
-        user.setLocale("en");
+        user.setLocal("en");
         user.setRating(0);
         userDAO.save(user);
         return true;

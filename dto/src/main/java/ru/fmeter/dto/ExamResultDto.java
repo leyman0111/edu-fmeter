@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class ExamResultDto {
     private Long id;
+    private Long userId;
     private ExamDto exam;
     private int achievement;
     private boolean passed;

@@ -3,7 +3,7 @@ package ru.fmeter.dto;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 public class UserDto {
@@ -19,7 +19,7 @@ public class UserDto {
     @NonNull
     private String lastName;
     private String midName;
-    private LocalDate birthday;
+    private String birthday;
     private String position;
     /**
      ISO 639-1:2002:
@@ -27,7 +27,7 @@ public class UserDto {
      * es - испанский,
      * ru - русский
      */
-    private String locale;
+    private String local;
     private Integer rating;
     @NonNull
     private OrganizationDto organization;
