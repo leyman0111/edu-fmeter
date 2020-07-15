@@ -3,6 +3,7 @@ package ru.fmeter.dao.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "cmn_answer")
@@ -12,6 +13,7 @@ public class ExamAnswer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long questionId;
+    private Date createDate;
     private String version;
     private boolean correct;
     private int point;

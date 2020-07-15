@@ -3,6 +3,7 @@ package ru.fmeter.dao.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,6 +14,7 @@ public class ExamResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
+    private Date createDate;
     private Long testId;
     private int achievement;
     private boolean passed;

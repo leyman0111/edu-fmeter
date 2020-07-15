@@ -21,4 +21,5 @@ public class Test {
     private String complexity;
     private boolean isBlocked = false;
     private String local;
+    private boolean statisticRequired;
 }

@@ -12,6 +12,7 @@ import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.ExamDto;
 import ru.fmeter.dto.ExamQuestionDto;
 import ru.fmeter.dto.ExamResultDto;
+import ru.fmeter.dto.TestDto;
 import ru.fmeter.edu.mapper.ExamMapper;
 import ru.fmeter.edu.mapper.ExamQuestionMapper;
 import ru.fmeter.edu.mapper.ExamResultMapper;
@@ -63,19 +64,25 @@ public class ExamService {
         Optional<Test> test = testDao.findById(id);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (test.isPresent() && !test.get().isBlocked() && user.getRating() >= test.get().getThreshold()) {
-            return new ResponseEntity<>(examMapper.testToExamDto(test.get()), HttpStatus.OK);
+            ExamDto exam = examMapper.testToExamDto(test.get());
+            if (user.getRating() < exam.getThreshold()) {
+                exam.setAccess(false);
+                exam.setQuestions(null);
+            }
+            return new ResponseEntity<>(exam, HttpStatus.OK);
         }
         return ResponseEntity.of(Optional.empty());
     }
 
     public ResponseEntity<ExamResultDto> postAnswers(Long id, HashMap<Long, String> answers) {
-        Optional<Test> test = testDao.findById(id);
+        Optional<Test> testDb = testDao.findById(id);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (test.isPresent() && !test.get().isBlocked() && user.getRating() >= test.get().getThreshold()) {
-            ExamResult result = checkAnswers(test.get(), answers, user.getId());
+        if (testDb.isPresent() && !testDb.get().isBlocked() && user.getRating() >= testDb.get().getThreshold()) {
+            Test test = testDb.get();
+            ExamResult result = checkAnswers(test, answers, user.getId());
             if (result.isPassed()) {
                 boolean contains = false;
-                for (ExamResult r : examResultDao.findAllByUserIdAndTestId(user.getId(), test.get().getId())) {
+                for (ExamResult r : examResultDao.findAllByUserIdAndTestId(user.getId(), test.getId())) {
                     if (r.isPassed()) {
                         contains = true;
                         break;
@@ -87,8 +94,10 @@ public class ExamService {
                 }
             }
             result = examResultDao.save(result);
+            test.setStatisticRequired(true);
+            testDao.save(test);
             ExamResultDto resultDto = examResultMapper.examResultToDto(result);
-            resultDto.setExam(examMapper.testToExamDto(test.get()));
+            resultDto.setExam(examMapper.testToExamDto(test));
             return new ResponseEntity<>(resultDto, HttpStatus.OK);
         }
         return ResponseEntity.of(Optional.empty());
