@@ -47,6 +47,7 @@ public class ProfileService {
         user.setBirthday(DateTimeUtility.stringToDate(userDto.getBirthday()));
         user.setPosition(userDto.getPosition());
         user.setLocal(userDto.getLocal());
+        user.setCountry(userDto.getCountry());
         user.setOrganization(organizationMapper.orgDtoToOrg(userDto.getOrganization()));
         if (userService.update(user)) {
             return new ResponseEntity<>("OK!", HttpStatus.OK);

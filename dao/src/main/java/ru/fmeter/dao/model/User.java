@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String midName;
     private Date birthday;
     private String position;
+    private String country;
 
     /**
     ISO 639-1:2002:
@@ -40,7 +41,7 @@ public class User implements UserDetails {
     private Organization organization;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-    private boolean blocked = false;
+    private boolean blocked = true;
     private boolean active = false;
 
     @Override

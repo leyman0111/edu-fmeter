@@ -48,4 +48,17 @@ public class ExamController {
     public ResponseEntity<String> postAnswer(@PathVariable Long id, @RequestBody String answer) {
         return examService.checkAnswer(id, answer);
     }
+
+    @GetMapping("/final")
+    public ResponseEntity<ExamDto> startFinalExam(@RequestParam String userSecretKey,
+                                                  @RequestParam String testSecretKey) {
+        return examService.find(userSecretKey, testSecretKey);
+    }
+
+    @PostMapping("/final")
+    public ResponseEntity<ExamResultDto> endFinalExam(@RequestParam String userSecretKey,
+                                                      @RequestParam String testSecretKey,
+                                                      @RequestBody HashMap<Long, String> answers) {
+        return examService.postAnswers(userSecretKey, testSecretKey, answers);
+    }
 }

@@ -19,6 +19,7 @@ public class PostServiceImpl implements PostService {
     private final static String ACTIVATION_SUBJECT = "Активация аккаунта";
     private final static String RECOVERY_SUBJECT = "Восстановление пароля";
     private final static String CERTIFICATE_SUBJECT = "Сертификат об успешном прохождении курса";
+    private final static String FINAL_TEST = "Контрольное тестирование";
 
     public PostServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -67,5 +68,14 @@ public class PostServiceImpl implements PostService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void sendTestMail(String addressee, String userSecretKey, String testSecretKey) {
+        String message = String.format("Вам открыт доступ к прохождению итогового тестирования по оборудованию Escort. " +
+                "Для начала тестирования необходимо пройти по ссылке: " +
+                "https://www.edu.fmeter.ru/exams/final?userSecretKey=%s&testSecretKey=%s . После успешного прохождения " +
+                "Вы получите сертификат, подтверждающий приобретенную квалификацию.", userSecretKey, testSecretKey);
+        sendTextMail(addressee, FINAL_TEST, message);
     }
 }

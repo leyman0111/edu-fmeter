@@ -8,4 +8,6 @@ public interface PostService {
     void sendRecoveryMail(String addressee, String secretKey);
 
     void sendCertificate(String addressee, File file);
+
+    void sendTestMail(String addressee, String userSecretKey, String testSecretKey);
 }

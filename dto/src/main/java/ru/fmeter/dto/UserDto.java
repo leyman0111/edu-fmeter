@@ -21,6 +21,7 @@ public class UserDto {
     private String midName;
     private String birthday;
     private String position;
+    private String country;
     /**
      ISO 639-1:2002:
      * en - английский,
@@ -29,8 +30,8 @@ public class UserDto {
      */
     private String local;
     private Integer rating;
-    @NonNull
     private OrganizationDto organization;
+    private boolean blocked = true;
 
     public UserDto() { }
 }

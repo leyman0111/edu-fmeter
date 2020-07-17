@@ -31,5 +31,9 @@ public class AdminController {
         return adminService.blockUser(id);
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> testUser(@RequestParam Long userId, @RequestParam Long testId) {
+        return adminService.testUser(userId, testId);
+    }
     //todo: set roles
 }

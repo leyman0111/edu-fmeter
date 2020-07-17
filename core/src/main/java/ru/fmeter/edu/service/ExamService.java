@@ -12,7 +12,6 @@ import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.ExamDto;
 import ru.fmeter.dto.ExamQuestionDto;
 import ru.fmeter.dto.ExamResultDto;
-import ru.fmeter.dto.TestDto;
 import ru.fmeter.edu.mapper.ExamMapper;
 import ru.fmeter.edu.mapper.ExamQuestionMapper;
 import ru.fmeter.edu.mapper.ExamResultMapper;
@@ -141,5 +140,42 @@ public class ExamService {
                     correct ? question.getPonderability() : 0));
         }
         return new ExamResult(userId, test.getId(), achievement, achievement >= test.getPassingScore(), examAnswers);
+    }
+
+    public ResponseEntity<ExamDto> find(String userSecretKey, String testSecretKey) {
+        Optional<String> login = SecretKeyStore.findLogin(userSecretKey);
+        Optional<String> testId = SecretKeyStore.findLogin(testSecretKey);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (login.isPresent() && testId.isPresent() && login.get().equals(user.getLogin())) {
+            Optional<Test> test = testDao.findById(Long.parseLong(testId.get()));
+            if (test.isPresent())
+                return new ResponseEntity<>(examMapper.testToExamDto(test.get()), HttpStatus.OK);
+        }
+        return ResponseEntity.of(Optional.empty());
+    }
+
+    public ResponseEntity<ExamResultDto> postAnswers(String userSecretKey, String testSecretKey,
+                                                     HashMap<Long, String> answers) {
+        Optional<String> login = SecretKeyStore.findLogin(userSecretKey);
+        Optional<String> testId = SecretKeyStore.findLogin(testSecretKey);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (login.isPresent() && testId.isPresent() && login.get().equals(user.getLogin())) {
+            Optional<Test> testDb = testDao.findById(Long.parseLong(testId.get()));
+            if (testDb.isPresent()) {
+                Test test = testDb.get();
+                ExamResult result = checkAnswers(test, answers, user.getId());
+                result = examResultDao.save(result);
+                test.setStatisticRequired(true);
+                testDao.save(test);
+                ExamResultDto resultDto = examResultMapper.examResultToDto(result);
+                resultDto.setExam(examMapper.testToExamDto(test));
+                if (result.isPassed()) {
+                    SecretKeyStore.delete(userSecretKey);
+                    SecretKeyStore.delete(testSecretKey);
+                }
+                return new ResponseEntity<>(resultDto, HttpStatus.OK);
+            }
+        }
+        return ResponseEntity.of(Optional.empty());
     }
 }
