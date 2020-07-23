@@ -2,6 +2,7 @@ package ru.fmeter.edu.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.fmeter.dao.model.Role;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.service.AdminService;
 
@@ -35,5 +36,14 @@ public class AdminController {
     public ResponseEntity<String> testUser(@RequestParam Long userId, @RequestParam Long testId) {
         return adminService.testUser(userId, testId);
     }
-    //todo: set roles
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getRoles() {
+        return adminService.getRoles();
+    }
+
+    @PostMapping("/{userId}/roles")
+    public ResponseEntity<String> setRoles(@PathVariable Long userId, @RequestBody List<Long> rolesIds) {
+        return adminService.setRoles(userId, rolesIds);
+    }
 }

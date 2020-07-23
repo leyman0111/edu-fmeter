@@ -42,6 +42,8 @@ public class UserService implements UserDetailsService {
     public boolean create(User user) {
         if (userDAO.findUserByLoginOrEmail(user.getLogin(), user.getEmail()).isPresent()) return false;
 
+        user.setBlocked(true);
+        user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setLocal("en");
         user.setRating(0);

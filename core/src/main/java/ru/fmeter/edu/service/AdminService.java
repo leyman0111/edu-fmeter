@@ -3,29 +3,32 @@ package ru.fmeter.edu.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.fmeter.dao.model.Role;
 import ru.fmeter.dao.model.Test;
 import ru.fmeter.dao.model.User;
+import ru.fmeter.dao.repo.RoleDao;
 import ru.fmeter.dao.repo.TestDao;
 import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.mapper.UserMapper;
 import ru.fmeter.post.PostService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AdminService {
     private final UserService userService;
     private final UserMapper userMapper;
     private final TestDao testDao;
+    private final RoleDao roleDao;
     private final PostService postService;
 
-    public AdminService(UserService userService, UserMapper userMapper, TestDao testDao, PostService postService) {
+    public AdminService(UserService userService, UserMapper userMapper, TestDao testDao,
+                        RoleDao roleDao, PostService postService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.testDao = testDao;
+        this.roleDao = roleDao;
         this.postService = postService;
     }
 
@@ -72,5 +75,29 @@ public class AdminService {
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Can`t find user or test", HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Role>> getRoles() {
+        return new ResponseEntity<>(roleDao.findAll(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> setRoles(Long userId, List<Long> rolesIds) {
+        Optional<User> userDb = userService.findById(userId);
+        if (!userDb.isPresent())
+            return new ResponseEntity<>("Can`t find user", HttpStatus.OK);
+
+        if (rolesIds.isEmpty())
+            return new ResponseEntity<>("Roles can`t be empty", HttpStatus.OK);
+
+        User user = userDb.get();
+        Set<Role> roles = new HashSet<>();
+        for (Long roleId : rolesIds) {
+            Optional<Role> role = roleDao.findById(roleId);
+            role.ifPresent(roles::add);
+        }
+        user.setRoles(roles);
+        if (userService.update(user))
+            return new ResponseEntity<>("OK!", HttpStatus.OK);
+        return new ResponseEntity<>("Can`t update user", HttpStatus.OK);
     }
 }

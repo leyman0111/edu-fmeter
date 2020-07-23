@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.User;
 import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.LoginDto;
+import ru.fmeter.dto.ProfileDto;
 import ru.fmeter.dto.UserDto;
+import ru.fmeter.edu.mapper.ProfileMapper;
 import ru.fmeter.edu.mapper.UserMapper;
 import ru.fmeter.post.PostService;
 
@@ -17,25 +19,28 @@ import java.util.Optional;
 @Service
 public class LoginService {
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final ProfileMapper profileMapper;
     private final PostService postService;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public LoginService(UserService userService, UserMapper userMapper, TokenService tokenService,
+    public LoginService(UserService userService, ProfileMapper profileMapper, TokenService tokenService,
                         PostService postService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.userMapper = userMapper;
+        this.profileMapper = profileMapper;
         this.tokenService = tokenService;
         this.postService = postService;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<String> register(UserDto userDTO) {
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        if (userService.create(userMapper.userDtoToUser(userDTO))) {
-            String secretKey = SecretKeyStore.generate(userDTO.getLogin());
-            postService.sendActivationMail(userDTO.getEmail(), secretKey);
+    public ResponseEntity<String> register(ProfileDto profile) {
+        User user = profileMapper.profileToUser(profile);
+        user.setPass(passwordEncoder.encode(profile.getPass()));
+        user.setBlocked(true);
+        user.setActive(false);
+        if (userService.create(user)) {
+            String secretKey = SecretKeyStore.generate(user.getLogin());
+            postService.sendActivationMail(user.getEmail(), secretKey);
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Login or email is already registered", HttpStatus.OK);

@@ -3,7 +3,7 @@ package ru.fmeter.edu.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmeter.dto.LoginDto;
-import ru.fmeter.dto.UserDto;
+import ru.fmeter.dto.ProfileDto;
 import ru.fmeter.edu.service.LoginService;
 
 @RestController
@@ -16,8 +16,8 @@ public class LoginController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> register(@RequestBody UserDto user) {
-        return loginService.register(user);
+    public ResponseEntity<String> register(@RequestBody ProfileDto profile) {
+        return loginService.register(profile);
     }
 
     @GetMapping("/activation/{key}")

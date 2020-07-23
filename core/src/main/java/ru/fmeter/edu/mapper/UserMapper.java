@@ -8,12 +8,11 @@ import ru.fmeter.utils.DateTimeUtility;
 
 import java.util.Date;
 
-@Mapper(componentModel = "spring", uses = OrganizationMapper.class)
+@Mapper(componentModel = "spring", uses = {OrganizationMapper.class, CertificateMapper.class})
 public interface UserMapper {
-    @Mapping(source = "password", target = "pass")
+    @Mapping(target = "pass", ignore = true)
     User userDtoToUser(UserDto userDto);
 
-    @Mapping(source = "pass", target = "password")
     UserDto userToUserDto(User user);
 
     default String birthdayToDto(Date birthday) {

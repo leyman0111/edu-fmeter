@@ -3,6 +3,7 @@ package ru.fmeter.edu.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmeter.dto.LoginDto;
+import ru.fmeter.dto.ProfileDto;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.service.ProfileService;
 
@@ -16,13 +17,13 @@ public class ProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<UserDto> get() {
+    public ResponseEntity<ProfileDto> get() {
         return profileService.getProfile();
     }
 
     @PostMapping
-    public ResponseEntity<String> update(@RequestBody UserDto userDto) {
-        return profileService.updateProfile(userDto);
+    public ResponseEntity<String> update(@RequestBody ProfileDto profile) {
+        return profileService.updateProfile(profile);
     }
 
     @DeleteMapping

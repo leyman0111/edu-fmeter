@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import ru.fmeter.dao.model.User;
 import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.LoginDto;
+import ru.fmeter.dto.ProfileDto;
 import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.mapper.OrganizationMapper;
+import ru.fmeter.edu.mapper.ProfileMapper;
 import ru.fmeter.edu.mapper.UserMapper;
 import ru.fmeter.utils.DateTimeUtility;
 
@@ -18,37 +20,28 @@ import java.util.Optional;
 @Service
 public class ProfileService {
     private final UserService userService;
-    private final UserMapper userMapper;
-    private final OrganizationMapper organizationMapper;
+    private final ProfileMapper profileMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public ProfileService(UserService userService, UserMapper userMapper,
-                          OrganizationMapper organizationMapper, PasswordEncoder passwordEncoder) {
+    public ProfileService(UserService userService, ProfileMapper profileMapper, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.userMapper = userMapper;
-        this.organizationMapper = organizationMapper;
+        this.profileMapper = profileMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<UserDto> getProfile() {
+    public ResponseEntity<ProfileDto> getProfile() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
+        return new ResponseEntity<>(profileMapper.userToProfile(user), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> updateProfile(UserDto userDto) {
+    public ResponseEntity<String> updateProfile(ProfileDto profile) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!userDto.getLogin().equals(user.getLogin()) && userService.isLoginExist(userDto.getLogin())) {
+        if (!profile.getLogin().equals(user.getLogin()) && userService.isLoginExist(profile.getLogin())) {
             return new ResponseEntity<>("Login is already exist", HttpStatus.OK);
         }
-        user.setLogin(userDto.getLogin());
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
-        user.setMidName(userDto.getMidName());
-        user.setBirthday(DateTimeUtility.stringToDate(userDto.getBirthday()));
-        user.setPosition(userDto.getPosition());
-        user.setLocal(userDto.getLocal());
-        user.setCountry(userDto.getCountry());
-        user.setOrganization(organizationMapper.orgDtoToOrg(userDto.getOrganization()));
+        User u = profileMapper.profileToUser(profile);
+        u.setPass(user.getPassword());
+        u.setId(user.getId());
         if (userService.update(user)) {
             return new ResponseEntity<>("OK!", HttpStatus.OK);
         }
