@@ -4,4 +4,5 @@ include 'dao'
 include 'dto'
 include 'utils'
 include 'post-service'
+include 'blank-service'
 

@@ -1,4 +1,4 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +9,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/tests")
-public class TestController {
+public class TestApi {
     private final TestService testService;
 
-    public TestController(TestService testService) {
+    public TestApi(TestService testService) {
         this.testService = testService;
     }
     @PostMapping("/new")

@@ -1,4 +1,4 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/statistics")
-public class StatisticController {
+public class StatisticApi {
     private final StatisticService statisticService;
 
-    public StatisticController(StatisticService statisticService) {
+    public StatisticApi(StatisticService statisticService) {
         this.statisticService = statisticService;
     }
 

@@ -1,4 +1,4 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/users")
-public class AdminController {
+public class AdminApi {
     private final AdminService adminService;
 
-    public AdminController(AdminService adminService) {
+    public AdminApi(AdminService adminService) {
         this.adminService = adminService;
     }
 

@@ -1,4 +1,4 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/exams")
-public class ExamController {
+public class ExamApi {
     private final ExamService examService;
 
-    public ExamController(ExamService examService) {
+    public ExamApi(ExamService examService) {
         this.examService = examService;
     }
 

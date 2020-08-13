@@ -1,4 +1,4 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,11 +7,11 @@ import ru.fmeter.dto.ProfileDto;
 import ru.fmeter.edu.service.LoginService;
 
 @RestController
-public class LoginController {
+public class LoginApi {
 
     private final LoginService loginService;
 
-    public LoginController(LoginService loginService) {
+    public LoginApi(LoginService loginService) {
         this.loginService = loginService;
     }
 

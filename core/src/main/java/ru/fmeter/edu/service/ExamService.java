@@ -12,9 +12,11 @@ import ru.fmeter.dao.service.UserService;
 import ru.fmeter.dto.ExamDto;
 import ru.fmeter.dto.ExamQuestionDto;
 import ru.fmeter.dto.ExamResultDto;
+import ru.fmeter.edu.mapper.CertificateMapper;
 import ru.fmeter.edu.mapper.ExamMapper;
 import ru.fmeter.edu.mapper.ExamQuestionMapper;
 import ru.fmeter.edu.mapper.ExamResultMapper;
+import ru.fmeter.post.PostService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +32,12 @@ public class ExamService {
     private final ExamQuestionMapper examQuestionMapper;
     private final ExamResultMapper examResultMapper;
     private final UserService userService;
+    private final PostService postService;
+    private final CertificateMapper certificateMapper;
 
-    public ExamService(TestDao testDao, QuestionDao questionDao, ExamResultDao examResultDao,
-                       ExamMapper examMapper, ExamQuestionMapper examQuestionMapper,
-                       ExamResultMapper examResultMapper, UserService userService) {
+    public ExamService(TestDao testDao, QuestionDao questionDao, ExamResultDao examResultDao, ExamMapper examMapper,
+                       ExamQuestionMapper examQuestionMapper, ExamResultMapper examResultMapper,
+                       UserService userService, PostService postService, CertificateMapper certificateMapper) {
         this.testDao = testDao;
         this.questionDao = questionDao;
         this.examResultDao = examResultDao;
@@ -41,6 +45,8 @@ public class ExamService {
         this.examQuestionMapper = examQuestionMapper;
         this.examResultMapper = examResultMapper;
         this.userService = userService;
+        this.postService = postService;
+        this.certificateMapper = certificateMapper;
     }
 
     public ResponseEntity<List<ExamDto>> findAll() {

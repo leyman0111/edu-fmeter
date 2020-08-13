@@ -1,18 +1,17 @@
-package ru.fmeter.edu.controller;
+package ru.fmeter.edu.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.fmeter.dto.LoginDto;
 import ru.fmeter.dto.ProfileDto;
-import ru.fmeter.dto.UserDto;
 import ru.fmeter.edu.service.ProfileService;
 
 @RestController
 @RequestMapping("/me")
-public class ProfileController {
+public class ProfileApi {
     private final ProfileService profileService;
 
-    public ProfileController(ProfileService profileService) {
+    public ProfileApi(ProfileService profileService) {
         this.profileService = profileService;
     }
 
